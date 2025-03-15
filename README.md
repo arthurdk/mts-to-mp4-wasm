@@ -131,7 +131,7 @@ This application uses FFmpeg.wasm, which is a WebAssembly port of the popular FF
 
 ## License
 
-ISC License
+bonjour 
 
 ## Acknowledgments
 
