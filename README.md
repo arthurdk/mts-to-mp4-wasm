@@ -2,6 +2,12 @@
 
 A browser-based application that converts MTS video files to MP4 format using FFmpeg.wasm (WebAssembly). This tool runs entirely in your browser without the need to upload your videos to any server.
 
+## Demo
+
+Try the online demo: [https://mts-converter.backbone.ovh/](https://mts-converter.backbone.ovh/)
+
+![MTS to MP4 Converter Screenshot](example.png)
+
 ## Features
 
 - Drag-and-drop or manual file selection
