@@ -445,4 +445,81 @@ footer {
         width: 100%;
         justify-content: center;
     }
+}
+
+.settings {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--light-gray);
+    border-radius: 5px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.setting-item input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.setting-item label {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Notification system */
+.notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    background-color: var(--success-color);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: slide-in 0.3s ease;
+    max-width: 300px;
+}
+
+.notification i {
+    font-size: 18px;
+}
+
+.notification.fade-out {
+    animation: fade-out 0.3s ease forwards;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
 } 

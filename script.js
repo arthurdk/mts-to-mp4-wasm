@@ -13,6 +13,7 @@ let lastPunTime = 0;
 let ffmpegLoaded = false;
 let cancelRequested = false;
 let isFFmpegBusy = false; // Add a flag to track if FFmpeg is busy
+let autoDownloadEnabled = true; // Default auto-download setting
 
 // Conversion puns - just like in the original app!
 const puns = [
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeSelectedBtn = document.getElementById('removeSelectedBtn');
     const convertBtn = document.getElementById('convertBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const autoDownloadToggle = document.getElementById('autoDownloadToggle');
     
     // Set up event listeners
     dropArea.addEventListener('dragover', (e) => {
@@ -79,6 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
     convertBtn.addEventListener('click', startConversion);
     
     cancelBtn.addEventListener('click', cancelConversion);
+
+    // Auto-download toggle handler
+    autoDownloadToggle.addEventListener('change', () => {
+        autoDownloadEnabled = autoDownloadToggle.checked;
+        // Save preference to localStorage for persistence
+        localStorage.setItem('autoDownloadEnabled', autoDownloadEnabled);
+    });
+    
+    // Load saved preference if available
+    if (localStorage.getItem('autoDownloadEnabled') !== null) {
+        autoDownloadEnabled = localStorage.getItem('autoDownloadEnabled') === 'true';
+        autoDownloadToggle.checked = autoDownloadEnabled;
+    }
     
     // File list selection
     fileList.addEventListener('click', (e) => {
@@ -523,10 +538,19 @@ function updateConversionStatus(fileId, status, outputName = null, downloadUrl =
     if (status === 'completed' && downloadUrl) {
         const fileName = outputName || 'unknown.mp4';
         conversion.statusElement.innerHTML = `
-            Completed: <a href="${downloadUrl}" download="${fileName}">${fileName}</a>
+            Completed: <a href="${downloadUrl}" download="${fileName}" class="download-link">${fileName}</a>
         `;
         conversion.progressElement.style.width = '100%';
         conversion.progressTextElement.textContent = '100%';
+        
+        // Store download info for auto-download
+        conversion.downloadUrl = downloadUrl;
+        conversion.fileName = fileName;
+        
+        // Automatically trigger download if enabled
+        if (autoDownloadEnabled) {
+            triggerDownload(downloadUrl, fileName);
+        }
     } else if (status === 'failed') {
         conversion.statusElement.textContent = `Failed: ${conversion.file.name}`;
     } else if (status === 'cancelled') {
@@ -536,6 +560,60 @@ function updateConversionStatus(fileId, status, outputName = null, downloadUrl =
     }
     
     conversion.element.className = `conversion-item ${status}`;
+}
+
+// Function to programmatically trigger a download
+function triggerDownload(url, filename) {
+    // Create a temporary anchor element
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = filename;
+    downloadLink.style.display = 'none';
+    
+    // Add to DOM, trigger click, and remove
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    
+    // Show download notification
+    showNotification(`Downloading: ${filename}`);
+    
+    // Remove after a short delay to ensure the download starts
+    setTimeout(() => {
+        document.body.removeChild(downloadLink);
+    }, 1000);
+}
+
+// Show notification
+function showNotification(message) {
+    // Check if notification container exists, if not create one
+    let notificationContainer = document.getElementById('notificationContainer');
+    if (!notificationContainer) {
+        notificationContainer = document.createElement('div');
+        notificationContainer.id = 'notificationContainer';
+        notificationContainer.className = 'notification-container';
+        document.body.appendChild(notificationContainer);
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerHTML = `
+        <i class="fas fa-download"></i>
+        <span>${message}</span>
+    `;
+    
+    // Add to container
+    notificationContainer.appendChild(notification);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // Cancel the conversion process

@@ -23,6 +23,53 @@ const server = http.createServer((req, res) => {
     // Set CORS headers for ALL responses - required for SharedArrayBuffer (FFmpeg.wasm)
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    
+    // Add a simple test endpoint for SharedArrayBuffer support
+    if (req.url === '/test-sab') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>SharedArrayBuffer Test</title>
+            </head>
+            <body>
+                <h1>SharedArrayBuffer Test</h1>
+                <div id="result"></div>
+                <h2>Headers Received:</h2>
+                <pre id="headers"></pre>
+                
+                <script>
+                    // Test for SharedArrayBuffer support
+                    const resultDiv = document.getElementById('result');
+                    try {
+                        const sab = new SharedArrayBuffer(1024);
+                        resultDiv.innerHTML = '<p style="color:green">✅ SharedArrayBuffer is supported in this browser!</p>';
+                        resultDiv.innerHTML += '<p>SharedArrayBuffer size: ' + sab.byteLength + '</p>';
+                    } catch (e) {
+                        resultDiv.innerHTML = '<p style="color:red">❌ SharedArrayBuffer is NOT supported: ' + e.message + '</p>';
+                    }
+                    
+                    // Display headers
+                    fetch('/headers-check')
+                        .then(response => {
+                            const headers = document.getElementById('headers');
+                            headers.textContent = 'COOP: ' + response.headers.get('cross-origin-opener-policy') + 
+                                               '\nCOEP: ' + response.headers.get('cross-origin-embedder-policy');
+                        });
+                </script>
+            </body>
+            </html>
+        `);
+        return;
+    }
+    
+    // Simple endpoint to check headers
+    if (req.url === '/headers-check') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok' }));
+        return;
+    }
 
     // Serve index.html for the root path
     let filePath = req.url === '/' ? './index.html' : '.' + req.url;
@@ -66,4 +113,6 @@ server.listen(PORT, () => {
     console.log(`-----------------------------------------------------------`);
     console.log(`For FFmpeg.wasm to work properly, the page must be served from`);
     console.log(`an actual server (like this one), not opened directly as a file.`);
+    console.log(`-----------------------------------------------------------`);
+    console.log(`To test SharedArrayBuffer support, go to: http://localhost:${PORT}/test-sab`);
 }); 
