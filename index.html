@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTS to MP4 Converter - WebAssembly</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- For SharedArrayBuffer compatibility -->
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MTS to MP4 Converter</h1>
+            <p class="subtitle">Convert MTS video files to MP4 format using WebAssembly</p>
+        </header>
+
+        <div class="main-content">
+            <!-- File Selection Area -->
+            <section class="file-section">
+                <h2>File Selection</h2>
+                <div class="drop-area" id="dropArea">
+                    <i class="fas fa-file-upload"></i>
+                    <p>Drop MTS files here or</p>
+                    <label for="fileInput" class="select-files-btn">Select MTS Files</label>
+                    <input type="file" id="fileInput" multiple accept=".mts,.MTS" hidden>
+                </div>
+                
+                <div class="file-list-container">
+                    <div class="file-list-header">
+                        <h3>Selected Files</h3>
+                        <div class="file-actions">
+                            <button id="clearBtn" class="btn secondary" disabled>Clear All</button>
+                            <button id="removeSelectedBtn" class="btn secondary" disabled>Remove Selected</button>
+                        </div>
+                    </div>
+                    <div class="file-list-wrapper">
+                        <ul id="fileList" class="file-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <div class="action-buttons">
+                    <button id="convertBtn" class="btn primary" disabled>Start Conversion</button>
+                    <button id="cancelBtn" class="btn warning" disabled>Cancel</button>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="progress-section">
+                <h2>Conversion Progress</h2>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">0%</div>
+                </div>
+                
+                <div class="status-container">
+                    <p id="statusLabel" class="status-label">Ready to convert</p>
+                    <p id="detailsLabel" class="details-label"></p>
+                </div>
+                
+                <p id="punDisplay" class="pun-display"></p>
+            </section>
+
+            <!-- Current Conversions -->
+            <section class="conversions-section">
+                <h2>Current Conversions</h2>
+                <div class="conversions-container" id="currentConversions">
+                    <!-- Conversion items will be added here dynamically -->
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Powered by FFmpeg.wasm and WebAssembly</p>
+        </footer>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingText">Loading FFmpeg.wasm...</p>
+        </div>
+    </div>
+
+    <!-- FFmpeg.wasm scripts (stable version 0.9.8) -->
+    <script src="ffmpeg-wasm/ffmpeg.min.js"></script>
+    
+    <!-- Application script -->
+    <script src="script.js"></script>
+</body>
+</html> 

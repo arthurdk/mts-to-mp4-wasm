@@ -1,0 +1,32 @@
+{
+  "name": "mts-to-mp4-converter-wasm",
+  "version": "1.0.0",
+  "description": "A WebAssembly-based MTS to MP4 video converter",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "docker:build": "docker build -t mts-to-mp4-converter .",
+    "docker:run": "docker run -p 3000:3000 --name mts-converter mts-to-mp4-converter",
+    "docker:stop": "docker stop mts-converter",
+    "docker:rm": "docker rm mts-converter",
+    "docker:compose:up": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down"
+  },
+  "keywords": [
+    "ffmpeg",
+    "wasm",
+    "video",
+    "conversion",
+    "mts",
+    "mp4"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ffmpeg/core": "^0.11.0",
+    "@ffmpeg/ffmpeg": "^0.11.6"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
