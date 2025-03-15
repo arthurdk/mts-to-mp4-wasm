@@ -75,32 +75,6 @@ npm run docker:run
 
 Then open your browser and navigate to `http://localhost:3000`.
 
-### Using Docker Compose
-
-For an easier setup, you can use Docker Compose:
-
-```bash
-docker-compose up -d
-```
-
-Or use the npm script:
-
-```bash
-npm run docker:compose:up
-```
-
-To stop and remove the Docker Compose services:
-
-```bash
-docker-compose down
-```
-
-Or use the npm script:
-
-```bash
-npm run docker:compose:down
-```
-
 ### Docker Security Features
 
 The Docker image includes several security enhancements:
